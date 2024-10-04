@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to ECSD Kiosk Browser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            padding: 50px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .app-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .app-item {
+            margin: 20px;
+            text-align: center;
+        }
+        .app-item img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        .app-item a {
+            text-decoration: none;
+            color: #0066cc;
+            font-size: 18px;
+            border: 1px solid #0066cc;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .app-item a:hover {
+            background-color: #0066cc;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to ECSD Kiosk Browser</h1>
+        <div class="app-list">
+            <!-- Yahoo -->
+            <div class="app-item">
+                <img src="assets/yahoo.png" alt="Yahoo Logo">
+                <a href="https://www.yahoo.com" target="_self">Yahoo</a>
+            </div>
+            <!-- Gmail -->
+            <div class="app-item">
+                <img src="assets/gmail.png" alt="Gmail Logo">
+                <a href="https://mail.google.com" target="_self">Gmail</a>
+            </div>
+            <!-- CollegeBoard -->
+            <div class="app-item">
+                <img src="assets/collegeboard.png" alt="CollegeBoard Logo">
+                <a href="https://www.collegeboard.org" target="_self">CollegeBoard</a>
+            </div>
+            <!-- CommonApp -->
+            <div class="app-item">
+                <img src="assets/commonapp.png" alt="CommonApp Logo">
+                <a href="https://www.commonapp.org" target="_self">CommonApp</a>
+            </div>
+            <!-- iCloud -->
+            <div class="app-item">
+                <img src="assets/icloud.png" alt="iCloud Logo">
+                <a href="https://www.icloud.com" target="_self">iCloud</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
