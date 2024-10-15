@@ -1,20 +1,19 @@
-// Listener for when the extension is installed
-chrome.runtime.onInstalled.addListener(() => {
-    console.log("Kiosk Browser Extension installed. Starting timer for 60 seconds.");
-    // Start the session timer for 60 seconds
-    chrome.alarms.create("closeKiosk", { delayInSeconds: 60 });
-});
+chrome.app.runtime.onLaunched.addListener(function() {
+    // Launch your app window
+    chrome.app.window.create('index.html', {
+        'bounds': {
+            'width': 1024,
+            'height': 768
+        }
+    }, function(win) {
+        // Start the countdown for 1 minute (60,000 milliseconds)
+        setTimeout(function() {
+            // Close the window after 1 minute
+            win.close();
 
-// Function to exit the kiosk mode
-function exitKioskMode() {
-    console.log("Exiting kiosk mode.");
-    chrome.browserPrivate.kiosk.exit(); // Exit the kiosk mode
-}
-
-// Listener for alarm events
-chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === "closeKiosk") {
-        console.log("Alarm triggered. Exiting kiosk mode.");
-        exitKioskMode();  // Call the exit function
-    }
+            // Optionally, log out the user if applicable (in kiosk mode)
+            // chrome.runtime.reload() or chrome.runtime.exit() can be used depending on the setup
+            chrome.runtime.reload();  // Restarts the app, essentially logging out
+        }, 60000); // 60,000 milliseconds = 1 minute
+    });
 });
