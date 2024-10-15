@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -81,19 +81,45 @@
         function validateOTP() {
             const enteredOTP = document.getElementById('otp').value;
             const secretKey = 'JBSWY3DPEHPK3PXP'; // Replace with your secret key
-            
+
             const generatedOTP = generateTOTP(secretKey);
 
             if (enteredOTP === generatedOTP) {
                 // Set session expiration to 50 minutes (in milliseconds)
                 const expirationTime = new Date().getTime() + 50 * 60 * 1000;
                 localStorage.setItem('sessionExpiration', expirationTime);
+
+                // Log session start and expiration
+                console.log('Session started. Will expire at:', new Date(expirationTime));
                 
-                // Redirect to app.html
-                window.location.href = 'app.html';
+                // Start the counter (for 60 seconds)
+                startCounter();
             } else {
                 document.getElementById('error-message').textContent = 'Invalid OTP, please try again.';
+                console.log('Invalid OTP entered.');
             }
+        }
+
+        function startCounter() {
+            console.log('Counter started for 60 seconds.');
+
+            // Set a timer for 60 seconds
+            let counter = 60;
+            const interval = setInterval(() => {
+                counter--;
+
+                // Log time remaining each second
+                console.log('Time remaining:', counter, 'seconds');
+
+                if (counter <= 0) {
+                    clearInterval(interval);
+                    console.log('60 seconds complete.');
+                    alert('60 seconds complete. The app will now close.');
+
+                    // Close the app (you can customize this for actual app behavior)
+                    window.exit(); // Close the browser window (this may not work in some browsers)
+                }
+            }, 1000);
         }
 
         function generateTOTP(secret, digits = 6, period = 30) {
