@@ -1,4 +1,5 @@
 // Run this when the app is installed or started
+//Testing 
 chrome.runtime.onInstalled.addListener(() => {
   setAppTimer();
 });
