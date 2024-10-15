@@ -8,11 +8,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
     }, function(win) {
         // Start the countdown for 1 minute (60,000 milliseconds)
         setTimeout(function() {
-            // Close the window after 1 minute
-            win.close();
-
-            // Log out the user or exit the app in kiosk mode
-            chrome.runtime.exit();  // Completely exits the app
+            // Close the window and exit the app after 1 minute
+            chrome.runtime.exit();  // Completely exit the app
         }, 60000); // 60,000 milliseconds = 1 minute
     });
 });
