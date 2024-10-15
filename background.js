@@ -11,7 +11,7 @@ function exitKioskMode() {
         windows.forEach(window => {
             window.tabs.forEach(tab => {
                 // Replace 'YOUR_APP_URL' with the actual URL of your app
-                if (tab.url.includes('YOUR_APP_URL')) {
+                if (tab.url.includes('https://safal00.github.io/key-browser/')) {
                     console.log(`Exiting kiosk mode for: ${tab.url}`);
                     chrome.tabs.update(tab.id, { url: 'chrome://quit' });
                 }
