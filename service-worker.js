@@ -8,14 +8,12 @@ self.addEventListener('install', (event) => {
         'index.html',
         'app.html',
         'manifest.json',
-        'background.js',
         'assets/icon.png',
         'assets/gmail.png',
         'assets/commonapp.png',
         'assets/yahoo.png',
         'assets/collegeboard.png',
         'assets/icloud.png',
-        // Add other assets as needed
       ]);
     })
   );
@@ -41,25 +39,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
-      // Return cached response or fetch from network
       return response || fetch(event.request);
     })
   );
-});
-// Background script (service worker)
-
-let autoCloseTimer;
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'startAutoClose') {
-    clearTimeout(autoCloseTimer);
-    autoCloseTimer = setTimeout(() => {
-      chrome.tabs.remove(sender.tab.id);
-    }, 10000); // 10 seconds
-    sendResponse({status: 'Timer started'});
-  } else if (message.action === 'cancelAutoClose') {
-    clearTimeout(autoCloseTimer);
-    sendResponse({status: 'Timer cancelled'});
-  }
-  return true; // Keeps the message channel open for asynchronous response
 });
