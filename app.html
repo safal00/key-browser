@@ -92,14 +92,26 @@
     // Check if the session is still valid
     chrome.storage.local.get(['sessionActive', 'sessionCounter'], (result) => {
       console.log('Session data:', result);
-      if (!result.sessionActive || result.sessionCounter >= 50) {
+      if (!result.sessionActive || result.sessionCounter >= 20) { // Change 50 to 20 for testing
         console.log('Session expired or invalid');
-        alert('Session expired. Please log in again.');
-        window.location.href = 'index.html'; // Redirect to login page
+        alert('Session expired. The application will close now.');
+        window.close(); // Attempt to close the application
       } else {
         console.log('Session is valid');
+        setupSessionTimeout(); // Set up session timeout
       }
     });
+
+    // Function to set up a session timeout
+    function setupSessionTimeout() {
+      const timeoutMinutes = 0.33; // 20 seconds
+      const timeout = timeoutMinutes * 60 * 1000; // Convert to milliseconds
+
+      setTimeout(() => {
+        alert("Session expired. The application will close now.");
+        window.close(); // Close the application
+      }, timeout);
+    }
 
     const allowedDomains = [
       'mail.google.com',
