@@ -1,38 +1,27 @@
-// Run this when the app is installed or started
-//Testing 
+// Listener for when the extension is installed
 chrome.runtime.onInstalled.addListener(() => {
-  setAppTimer();
+    console.log("Kiosk Browser Extension installed. Starting timer for 20 seconds.");
+    // Start the session timer for 20 seconds
+    chrome.alarms.create("closeKiosk", { delayInSeconds: 20 });
 });
 
-chrome.runtime.onStartup.addListener(() => {
-  setAppTimer();
-});
-
-// Set an alarm to trigger after 10 seconds (0.1667 minutes)
-function setAppTimer() {
-  chrome.alarms.create('appCloseAlarm', {delayInMinutes: 0.5});  // Set the alarm for 10 seconds (0.1667 minutes)
-}
-
-// Listen for the alarm trigger to close the kiosk app
+// Listener for alarm events
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'appCloseAlarm') {
-    closeApp();  // Call the function to close the app
-  }
+    if (alarm.name === "closeKiosk") {
+        console.log("Alarm triggered. Closing all tabs.");
+        chrome.tabs.query({}, (tabs) => {
+            tabs.forEach((tab) => {
+                console.log(`Closing tab: ${tab.url}`);
+                chrome.tabs.remove(tab.id);  // Close each tab
+            });
+        });
+    }
 });
 
-// Function to close the kiosk app by closing all tabs
-function closeApp() {
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      chrome.tabs.remove(tab.id);  // Close each tab (shuts down the kiosk app)
-    });
-  });
-}
-
+// Optional: Add a listener for messages (like login)
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "login") {
-    chrome.storage.local.set({sessionActive: true}, () => {
-      chrome.tabs.create({url: 'app.html'});  // Open the kiosk app with browser options
-    });
-  }
+    if (request.action === "login") {
+        console.log("Login action received. Starting session.");
+        chrome.tabs.create({ url: 'app.html' });
+    }
 });
