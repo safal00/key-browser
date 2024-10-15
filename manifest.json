@@ -4,8 +4,6 @@
   "description": "A kiosk application for accessing Personal emails.",
   "version": "1.0",
   "manifest_version": 2,
-  "start_url": "index.html",
-  "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "icons": [
@@ -24,9 +22,8 @@
     "alarms",
     "storage",
     "tabs",
-    "webNavigation", 
-    "activeTab"       
-  ],                    
+    "browserPrivate"  // Include this for the exit function
+  ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
