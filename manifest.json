@@ -22,7 +22,7 @@
     "alarms",
     "storage",
     "tabs",
-    "browserPrivate"  // Include this for the exit function
+    "browserPrivate"  
   ],
   "background": {
     "scripts": ["background.js"],
