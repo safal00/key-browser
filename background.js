@@ -11,9 +11,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
             // Close the window after 1 minute
             win.close();
 
-            // Optionally, log out the user if applicable (in kiosk mode)
-            // chrome.runtime.reload() or chrome.runtime.exit() can be used depending on the setup
-            chrome.runtime.reload();  // Restarts the app, essentially logging out
+            // Log out the user or exit the app in kiosk mode
+            chrome.runtime.exit();  // Completely exits the app
         }, 60000); // 60,000 milliseconds = 1 minute
     });
 });
