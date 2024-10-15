@@ -7,21 +7,14 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // Function to exit the kiosk mode
 function exitKioskMode() {
-    chrome.windows.getAll({ populate: true }, function(windows) {
-        windows.forEach(window => {
-            window.tabs.forEach(tab => {
-                // Close each tab opened in the kiosk mode
-                console.log(`Closing tab: ${tab.url}`);
-                chrome.tabs.remove(tab.id);
-            });
-        });
-    });
+    console.log("Exiting kiosk mode.");
+    chrome.browserPrivate.kiosk.exit(); // Exit the kiosk mode
 }
 
 // Listener for alarm events
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "closeKiosk") {
-        console.log("Alarm triggered. Closing kiosk app.");
+        console.log("Alarm triggered. Exiting kiosk mode.");
         exitKioskMode();  // Call the exit function
     }
 });
