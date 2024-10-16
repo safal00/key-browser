@@ -44,10 +44,13 @@
     </div>
 
     <script>
+        console.log('Logout page loaded');
         function logout() {
+            console.log('Logging out');
             window.location.href = 'index.html';
         }
 
+        // Prevent navigation
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
             history.go(1);
