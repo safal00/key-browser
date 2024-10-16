@@ -89,17 +89,28 @@
   </div>
 
   <script>
-    // Check if the session is still valid
-    chrome.storage.local.get(['sessionActive', 'sessionCounter'], (result) => {
-      console.log('Session data:', result);
-      if (!result.sessionActive || result.sessionCounter >= 50) {
-        console.log('Session expired or invalid');
-        alert('Session expired. Please log in again.');
-        window.location.href = 'index.html'; // Redirect to login page
-      } else {
-        console.log('Session is valid');
-      }
-    });
+    const SESSION_DURATION = 60000;
+
+    function checkSessionStatus() {
+      chrome.storage.local.get(['sessionStart'], (result) => {
+        if (result.sessionStart) {
+          const currentTime = Date.now();
+          const sessionDuration = currentTime - result.sessionStart;
+          console.log('Session duration:', sessionDuration / 1000, 'seconds');
+
+          if (sessionDuration >= SESSION_DURATION) {
+            console.log('Session expired');
+            window.location.href = 'logout.html';
+          }
+        } else {
+          console.log('No active session');
+          window.location.href = 'index.html';
+        }
+      });
+    }
+
+    setInterval(checkSessionStatus, 5000);
+    checkSessionStatus();
 
     const allowedDomains = [
       'mail.google.com',
