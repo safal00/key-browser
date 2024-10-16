@@ -1,43 +1,29 @@
 chrome.runtime.onInstalled.addListener(() => {
-  startSessionCounter();
+  console.log('Extension installed');
 });
 
 chrome.runtime.onStartup.addListener(() => {
-  startSessionCounter();
+  console.log('Extension started');
 });
 
-function startSessionCounter() {
-  chrome.storage.local.set({sessionCounter: 0});
-  chrome.alarms.create('sessionTick', {periodInMinutes: 1});
-}
+chrome.alarms.create('checkSession', { periodInMinutes: 1 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'sessionTick') {
-    chrome.storage.local.get('sessionCounter', (result) => {
-      let counter = result.sessionCounter || 0;
-      counter++;
-      chrome.storage.local.set({sessionCounter: counter});
-      
-      if (counter >= 50) {
-        resetApp();
+  if (alarm.name === 'checkSession') {
+    chrome.storage.local.get(['sessionStart'], function(result) {
+      if (result.sessionStart) {
+        const currentTime = Date.now();
+        const sessionDuration = currentTime - result.sessionStart;
+        console.log('Session duration:', sessionDuration / 1000, 'seconds');
+
+        if (sessionDuration >= 60000) {
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            if (tabs[0]) {
+              chrome.tabs.update(tabs[0].id, {url: 'logout.html'});
+            }
+          });
+        }
       }
-    });
-  }
-});
-
-function resetApp() {
-  chrome.storage.local.remove(['sessionCounter', 'sessionActive']);
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      chrome.tabs.reload(tab.id);
-    });
-  });
-}
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "login") {
-    chrome.storage.local.set({sessionActive: true, sessionCounter: 0}, () => {
-      chrome.tabs.create({url: 'app.html'});
     });
   }
 });
