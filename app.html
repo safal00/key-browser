@@ -115,12 +115,6 @@
         if (!allowedDomains.includes(domain)) {
           e.preventDefault();
           alert('Access to this domain is restricted.');
-        } else {
-          clearTimeout(logoutTimer);
-          logoutTimer = setTimeout(() => {
-            console.log('Timer expired, redirecting to logout page');
-            window.location.href = 'logout.html';
-          }, 60000); // 1 minute
         }
       }
     });
