@@ -89,7 +89,7 @@
   </div>
 
   <script>
-    const SESSION_DURATION = 1200000; // 20 minutes in milliseconds
+    const SESSION_DURATION = 60000; // 1 minutes in milliseconds
 
     function checkSessionStatus() {
         chrome.storage.local.get(['sessionStart'], function(result) {
