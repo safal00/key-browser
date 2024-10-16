@@ -89,55 +89,39 @@
   </div>
 
   <script>
-    const SESSION_DURATION = 60000; // 1 minutes in milliseconds
-
-    function checkSessionStatus() {
-        chrome.storage.local.get(['sessionStart'], function(result) {
-            if (result.sessionStart) {
-                const currentTime = Date.now();
-                const sessionDuration = currentTime - result.sessionStart;
-                console.log('Session duration:', sessionDuration / 1000, 'seconds');
-
-                if (sessionDuration >= SESSION_DURATION) {
-                    window.location.href = 'logout.html';
-                } else if (sessionDuration >= SESSION_DURATION - 60000) { // 1 minute before expiry
-                    console.log('Session expiring soon');
-                    alert('Your session will expire in 1 minute. Please save your work and prepare to log out.');
-                }
-            } else {
-                console.log('No active session found');
-                window.location.href = 'index.html';
-            }
-        });
-    }
-
-    // Check session status every minute
-    setInterval(checkSessionStatus, 60000);
-
-    // Also check on page load
-    checkSessionStatus();
+    // Check if the session is still valid
+    chrome.storage.local.get(['sessionActive', 'sessionCounter'], (result) => {
+      console.log('Session data:', result);
+      if (!result.sessionActive || result.sessionCounter >= 50) {
+        console.log('Session expired or invalid');
+        alert('Session expired. Please log in again.');
+        window.location.href = 'index.html'; // Redirect to login page
+      } else {
+        console.log('Session is valid');
+      }
+    });
 
     const allowedDomains = [
-        'mail.google.com',
-        'www.commonapp.org',
-        'www.yahoo.com',
-        'www.collegeboard.org',
-        'www.icloud.com'
+      'mail.google.com',
+      'www.commonapp.org',
+      'www.yahoo.com',
+      'www.collegeboard.org',
+      'www.icloud.com'
     ];
 
     function goBack() {
-        window.history.back();
+      window.history.back();
     }
 
     document.addEventListener('click', function (e) {
-        const target = e.target.closest('a');
-        if (target) {
-            const domain = new URL(target.href).hostname;
-            if (!allowedDomains.includes(domain)) {
-                e.preventDefault();
-                alert('Access to this domain is restricted.');
-            }
+      const target = e.target.closest('a');
+      if (target) {
+        const domain = new URL(target.href).hostname;
+        if (!allowedDomains.includes(domain)) {
+          e.preventDefault();
+          alert('Access to this domain is restricted.');
         }
+      }
     });
   </script>
 </body>
