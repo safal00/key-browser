@@ -91,10 +91,10 @@
   <script>
     console.log('App page loaded');
 
-    // Start the logout timer when this page loads
-    chrome.runtime.sendMessage({action: "startTimer"}, function(response) {
-      console.log('Timer start message sent, response:', response);
-    });
+    let logoutTimer = setTimeout(() => {
+      console.log('Timer expired, redirecting to logout page');
+      window.location.href = 'logout.html';
+    }, 60000); // 1 minute
 
     const allowedDomains = [
       'mail.google.com',
@@ -115,6 +115,12 @@
         if (!allowedDomains.includes(domain)) {
           e.preventDefault();
           alert('Access to this domain is restricted.');
+        } else {
+          clearTimeout(logoutTimer);
+          logoutTimer = setTimeout(() => {
+            console.log('Timer expired, redirecting to logout page');
+            window.location.href = 'logout.html';
+          }, 60000); // 1 minute
         }
       }
     });
