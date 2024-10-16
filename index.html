@@ -80,17 +80,16 @@
 
         function validateOTP() {
             const enteredOTP = document.getElementById('otp').value;
-            const secretKey = 'JBSWY3DPEHPK3PXP'; // Replace with your secret key
+            const secretKey = 'JBSWY3DPEHPK3PXP';
             
             const generatedOTP = generateTOTP(secretKey);
 
             if (enteredOTP === generatedOTP) {
-                // Set session expiration to 50 minutes (in milliseconds)
-                const expirationTime = new Date().getTime() + 50 * 60 * 1000;
-                localStorage.setItem('sessionExpiration', expirationTime);
-                
-                // Redirect to app.html
-                window.location.href = 'app.html';
+                const sessionStart = Date.now();
+                chrome.storage.local.set({sessionStart: sessionStart}, function() {
+                    console.log('Session started:', new Date(sessionStart).toISOString());
+                    window.location.href = 'app.html';
+                });
             } else {
                 document.getElementById('error-message').textContent = 'Invalid OTP, please try again.';
             }
