@@ -20,7 +20,7 @@
       "type": "image/png"
     }
   ],
-  "permissions": ["alarms", "storage", "tabs"],
+  "permissions": ["tabs"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
