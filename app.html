@@ -89,28 +89,12 @@
   </div>
 
   <script>
-    const SESSION_DURATION = 60000;
+    console.log('App page loaded');
 
-    function checkSessionStatus() {
-      chrome.storage.local.get(['sessionStart'], (result) => {
-        if (result.sessionStart) {
-          const currentTime = Date.now();
-          const sessionDuration = currentTime - result.sessionStart;
-          console.log('Session duration:', sessionDuration / 1000, 'seconds');
-
-          if (sessionDuration >= SESSION_DURATION) {
-            console.log('Session expired');
-            window.location.href = 'logout.html';
-          }
-        } else {
-          console.log('No active session');
-          window.location.href = 'index.html';
-        }
-      });
-    }
-
-    setInterval(checkSessionStatus, 5000);
-    checkSessionStatus();
+    // Start the logout timer when this page loads
+    chrome.runtime.sendMessage({action: "startTimer"}, function(response) {
+      console.log('Timer start message sent, response:', response);
+    });
 
     const allowedDomains = [
       'mail.google.com',
