@@ -98,11 +98,6 @@
 
             if (enteredOTP === generatedOTP) {
                 console.log('OTP validation successful');
-                // Start the timer
-                chrome.runtime.sendMessage({action: "startTimer"}, function(response) {
-                    console.log('Timer start message sent, response:', response);
-                });
-                
                 console.log('Redirecting to app.html');
                 window.location.href = 'app.html';
             } else {
