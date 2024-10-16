@@ -89,57 +89,55 @@
   </div>
 
   <script>
-    // Check if the chrome.storage.local API is available
-    if (typeof chrome !== "undefined" && chrome.storage) {
-      // Check if the session is still valid
-      chrome.storage.local.get(['sessionActive', 'sessionCounter'], (result) => {
-        console.log('Session data:', result);
-        if (!result.sessionActive || result.sessionCounter >= 20) { // Change 50 to 20 for testing
-          console.log('Session expired or invalid');
-          alert('Session expired. The application will close now.');
-          window.close(); // Attempt to close the application
-        } else {
-          console.log('Session is valid');
-          setupSessionTimeout(); // Set up session timeout
-        }
-      });
+    const SESSION_DURATION = 1200000; // 20 minutes in milliseconds
 
-      // Function to set up a session timeout
-      function setupSessionTimeout() {
-        const timeoutMinutes = 0.33; // 20 seconds
-        const timeout = timeoutMinutes * 60 * 1000; // Convert to milliseconds
+    function checkSessionStatus() {
+        chrome.storage.local.get(['sessionStart'], function(result) {
+            if (result.sessionStart) {
+                const currentTime = Date.now();
+                const sessionDuration = currentTime - result.sessionStart;
+                console.log('Session duration:', sessionDuration / 1000, 'seconds');
 
-        setTimeout(() => {
-          alert("Session expired. The application will close now.");
-          window.close(); // Close the application
-        }, timeout);
-      }
-    } else {
-      console.error('Chrome storage API is not available.');
-      alert('Session management is not available. Please refresh the app or check your installation.');
+                if (sessionDuration >= SESSION_DURATION) {
+                    window.location.href = 'logout.html';
+                } else if (sessionDuration >= SESSION_DURATION - 60000) { // 1 minute before expiry
+                    console.log('Session expiring soon');
+                    alert('Your session will expire in 1 minute. Please save your work and prepare to log out.');
+                }
+            } else {
+                console.log('No active session found');
+                window.location.href = 'index.html';
+            }
+        });
     }
 
+    // Check session status every minute
+    setInterval(checkSessionStatus, 60000);
+
+    // Also check on page load
+    checkSessionStatus();
+
     const allowedDomains = [
-      'mail.google.com',
-      'www.commonapp.org',
-      'www.yahoo.com',
-      'www.collegeboard.org',
-      'www.icloud.com'
+        'mail.google.com',
+        'www.commonapp.org',
+        'www.yahoo.com',
+        'www.collegeboard.org',
+        'www.icloud.com'
     ];
 
     function goBack() {
-      window.history.back();
+        window.history.back();
     }
 
     document.addEventListener('click', function (e) {
-      const target = e.target.closest('a');
-      if (target) {
-        const domain = new URL(target.href).hostname;
-        if (!allowedDomains.includes(domain)) {
-          e.preventDefault();
-          alert('Access to this domain is restricted.');
+        const target = e.target.closest('a');
+        if (target) {
+            const domain = new URL(target.href).hostname;
+            if (!allowedDomains.includes(domain)) {
+                e.preventDefault();
+                alert('Access to this domain is restricted.');
+            }
         }
-      }
     });
   </script>
 </body>
