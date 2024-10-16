@@ -4,6 +4,8 @@
   "description": "A kiosk application for accessing Personal emails.",
   "version": "1.0",
   "manifest_version": 2,
+  "start_url": "index.html",
+  "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "icons": [
@@ -18,23 +20,10 @@
       "type": "image/png"
     }
   ],
-  "permissions": [
-    "alarms",
-    "storage",
-    "tabs"
-  ],
+  "permissions": ["alarms", "storage", "tabs"],
   "background": {
-    "scripts": ["background.js", "service-worker.js"],
+    "scripts": ["background.js"],
     "persistent": false
   },
-  "web_accessible_resources": [
-    "index.html",
-    "app.html",
-    "logout.html",
-    "assets/*"
-  ],
-  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'",
-  "start_url": "index.html",
-  "display": "standalone",
-  "orientation": "any"
+  "web_accessible_resources": ["app.html"]
 }
