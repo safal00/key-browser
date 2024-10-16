@@ -72,7 +72,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded');
             const loginButton = document.getElementById('loginButton');
             if (loginButton) {
                 loginButton.addEventListener('click', validateOTP);
@@ -80,30 +79,45 @@
         });
 
         function validateOTP() {
-            console.log('Validating OTP');
             const enteredOTP = document.getElementById('otp').value;
             const secretKey = 'JBSWY3DPEHPK3PXP'; // Replace with your secret key
             
             const generatedOTP = generateTOTP(secretKey);
 
-            console.log('Entered OTP:', enteredOTP);
-            console.log('Generated OTP:', generatedOTP);
-
             if (enteredOTP === generatedOTP) {
-                console.log('OTP valid, starting session');
-                const sessionStart = Date.now();
-                chrome.storage.local.set({sessionStart: sessionStart, sessionActive: true}, function() {
-                    console.log('Session started:', new Date(sessionStart).toISOString());
-                    window.location.href = 'app.html';
-                });
+                // Set session expiration to 50 minutes (in milliseconds)
+                const expirationTime = new Date().getTime() + 50 * 60 * 1000;
+                localStorage.setItem('sessionExpiration', expirationTime);
+                
+                // Redirect to app.html
+                window.location.href = 'app.html';
             } else {
-                console.log('Invalid OTP');
                 document.getElementById('error-message').textContent = 'Invalid OTP, please try again.';
             }
         }
 
         function generateTOTP(secret, digits = 6, period = 30) {
-            // ... (keep existing TOTP generation code) ...
+            const base32chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+            let bits = '';
+            for (let i = 0; i < secret.length; i++) {
+                let val = base32chars.indexOf(secret.charAt(i).toUpperCase());
+                bits += val.toString(2).padStart(5, '0');
+            }
+            let hex = '';
+            for (let i = 0; i + 4 <= bits.length; i += 4) {
+                let chunk = bits.substr(i, 4);
+                hex += parseInt(chunk, 2).toString(16);
+            }
+
+            const epoch = Math.round(new Date().getTime() / 1000.0);
+            const time = leftpad(dec2hex(Math.floor(epoch / period)), 16, '0');
+            const hmacObj = CryptoJS.HmacSHA1(CryptoJS.enc.Hex.parse(time), CryptoJS.enc.Hex.parse(hex));
+            const hmac = hmacObj.toString(CryptoJS.enc.Hex);
+
+            const offset = parseInt(hmac.substring(hmac.length - 1), 16);
+            let otp = (parseInt(hmac.substr(offset * 2, 8), 16) & 0x7fffffff) + '';
+            otp = otp.substr(otp.length - digits, digits);
+            return otp.padStart(digits, '0');
         }
 
         function dec2hex(s) { return (s < 15.5 ? '0' : '') + Math.round(s).toString(16); }
