@@ -85,11 +85,8 @@
             const generatedOTP = generateTOTP(secretKey);
 
             if (enteredOTP === generatedOTP) {
-                const sessionStart = Date.now();
-                chrome.storage.local.set({sessionStart: sessionStart}, function() {
-                    console.log('Session started:', new Date(sessionStart).toISOString());
-                    window.location.href = 'app.html';
-                });
+                chrome.runtime.sendMessage({action: "startTimer"});
+                window.location.href = 'app.html';
             } else {
                 document.getElementById('error-message').textContent = 'Invalid OTP, please try again.';
             }
