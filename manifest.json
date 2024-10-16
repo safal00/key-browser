@@ -24,8 +24,17 @@
     "tabs"
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "service-worker.js"],
     "persistent": false
   },
-  "web_accessible_resources": ["app.html", "logout.html"]
+  "web_accessible_resources": [
+    "index.html",
+    "app.html",
+    "logout.html",
+    "assets/*"
+  ],
+  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "any"
 }
