@@ -4,6 +4,8 @@
   "description": "A kiosk application for accessing Personal emails.",
   "version": "1.0",
   "manifest_version": 2,
+  "kiosk_enabled": true,
+  "kiosk_only": true,
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -21,9 +23,5 @@
     }
   ],
   "permissions": ["tabs"],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
   "web_accessible_resources": ["app.html", "logout.html"]
 }
