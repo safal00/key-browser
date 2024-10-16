@@ -84,14 +84,20 @@
             
             const generatedOTP = generateTOTP(secretKey);
 
+            console.log('Entered OTP:', enteredOTP);
+            console.log('Generated OTP:', generatedOTP);
+
             if (enteredOTP === generatedOTP) {
+                console.log('OTP validated successfully');
                 // Start the session timer
                 const sessionStart = Date.now();
                 chrome.storage.local.set({sessionStart: sessionStart}, function() {
                     console.log('Session timer started:', new Date(sessionStart).toISOString());
+                    // Redirect to app.html
                     window.location.href = 'app.html';
                 });
             } else {
+                console.log('OTP validation failed');
                 document.getElementById('error-message').textContent = 'Invalid OTP, please try again.';
             }
         }
